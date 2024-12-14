@@ -1,21 +1,24 @@
 package org.myNeuro;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Neuron {
     NeuroNetwork nn;
     int level;
     float[] weights;
+    float bias;
+
     public float value;
 
-    public Neuron(NeuroNetwork nn, int level) {
+
+    public Neuron(NeuroNetwork nn, int level, int j) {
         int sizeWeight = level == 0 ? 0 : nn.getLevel(level - 1).size();
         this.weights = new float[sizeWeight];
         this.nn = nn;
         this.level = level;
-
         for(int i = 0; i < sizeWeight; ++i) {
+            this.bias = (float)Math.random();
+//            this.weights[i] = StaticValues.NN[level][j][i];
             this.weights[i] = (float)Math.random();
         }
 
@@ -27,49 +30,52 @@ public class Neuron {
 
     public void setWeights(float... weights) {
         this.weights = weights;
-        this.calcVaule();
+        //this.calcValue();
     }
 
     public void teach(float correctValue) {
         if (this.level != 0) {
             List<Neuron> preLevel = this.nn.getLevel(this.level - 1);
-            float error = this.value - correctValue;
-            float weightDelta = error * this.value * (1.0F - this.value);
+
+            float error = this.value * (1.0F - this.value) * (correctValue - this.value);
+//            if (this.level == nn.nn.size()-1)
+//                System.out.println("level " + this.level + " error " + error);
             float[] newWeight = new float[this.weights.length];
 
-            int i;
-            for(i = 0; i < this.weights.length; ++i) {
-                float var10002 = this.weights[i];
-                float var10003 = ((Neuron)preLevel.get(i)).value * weightDelta;
-                Objects.requireNonNull(this.nn);
-                newWeight[i] = var10002 - var10003 * 0.5F;
+
+            bias = bias + nn.LEARNING_RATE * error;
+
+            for(int i = 0; i < preLevel.size(); ++i) {
+                Neuron n = preLevel.get(i);
+                float correct = n.value + weights[i] * error;
+                n.teach(correct);
+            }
+
+            for(int i = 0; i < this.weights.length; i++) {
+                newWeight[i] = weights[i] + nn.LEARNING_RATE * preLevel.get(i).value * error;
             }
 
             this.setWeights(newWeight);
 
-            for(i = 0; i < preLevel.size(); ++i) {
-                Neuron n = (Neuron)preLevel.get(i);
-                n.teach(n.value - newWeight[i] * weightDelta);
-            }
-
         }
     }
 
-    void calcVaule() {
-        if (this.level > 0) {
+    void calcValue() {
+        if (level > 0) {
             float res = 0.0F;
-            List<Neuron> preLevel = this.nn.getLevel(this.level - 1);
+            List<Neuron> preLevel = nn.getLevel(this.level - 1);
 
             for(int i = 0; i < preLevel.size(); ++i) {
-                res += this.weights[i] * ((Neuron)preLevel.get(i)).value;
+                res += this.weights[i] * preLevel.get(i).value;
             }
 
-            this.value = this.sigmoid(res);
+            this.value = this.sigmoid(res + this.bias);
+            //System.out.println(" level " + this.level + " value " + this.value);
         }
 
     }
 
     float sigmoid(float x) {
-        return (float)(1.0 / (1.0 + Math.exp((double)(-x))));
+        return (float)(1.0 / (1.0 + Math.exp((-x))));
     }
 }
