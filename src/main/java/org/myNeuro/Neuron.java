@@ -2,6 +2,8 @@ package org.myNeuro;
 
 import java.util.List;
 
+import static java.lang.Math.abs;
+
 public class Neuron {
     NeuronNetwork nn;
     int level;
@@ -42,9 +44,7 @@ public class Neuron {
             float[] newWeight = new float[this.weights.length];
 
 
-            bias = bias + nn.LEARNING_RATE * error;
-
-            for(int i = 0; i < preLevel.size(); ++i) {
+            for(int i = 0; i < preLevel.size(); i++) {
                 Neuron n = preLevel.get(i);
                 float correct = n.value + weights[i] * error;
                 n.teach(correct);
@@ -54,6 +54,7 @@ public class Neuron {
                 newWeight[i] = weights[i] + nn.LEARNING_RATE * preLevel.get(i).value * error;
             }
 
+            bias = bias + nn.LEARNING_RATE * error;
             this.setWeights(newWeight);
 
         }
@@ -74,7 +75,33 @@ public class Neuron {
 
     }
 
-    float sigmoid(float x) {
-        return (float)(1.0 / (1.0 + Math.exp((-x))));
+    float sigmoid2(float x) {
+        return (1.0f / (1.0f + (float) Math.exp((-x))));
     }
+    float sigmoid(float x) {
+        // Return early for large or small x values to avoid overflow issues and enhance stability
+        if (x > 20) {
+            return 1.0f; // e^x is very large and effectively reaches 1
+        } else if (x < -20) {
+            return 0.0f; // e^x is effectively 0 for large negative values
+        } else {
+            float expNegX = (float) Math.exp(-x);
+            return 1.0f / (1.0f + expNegX);
+        }
+    }
+    float sigmoid4(float x) {
+        // Handle extreme values to prevent overflow and improve numerical stability
+        if (x >= 0) {
+            float expNegX = (float) Math.exp(-x);
+            return 1.0f / (1.0f + expNegX);
+        } else {
+            float expX = (float) Math.exp(x);
+            return expX / (1.0f + expX);
+        }
+    }
+
+    float sigmoid1(float x) {
+        return 0.5f * (x / (1 + abs(x))) + 0.5f;
+    }
+
 }
