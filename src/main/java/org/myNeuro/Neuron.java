@@ -3,7 +3,7 @@ package org.myNeuro;
 import java.util.List;
 
 public class Neuron {
-    NeuroNetwork nn;
+    NeuronNetwork nn;
     int level;
     float[] weights;
     float bias;
@@ -11,14 +11,13 @@ public class Neuron {
     public float value;
 
 
-    public Neuron(NeuroNetwork nn, int level, int j) {
+    public Neuron(NeuronNetwork nn, int level) {
         int sizeWeight = level == 0 ? 0 : nn.getLevel(level - 1).size();
         this.weights = new float[sizeWeight];
         this.nn = nn;
         this.level = level;
         for(int i = 0; i < sizeWeight; ++i) {
             this.bias = (float)Math.random();
-//            this.weights[i] = StaticValues.NN[level][j][i];
             this.weights[i] = (float)Math.random();
         }
 

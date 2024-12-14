@@ -1,18 +1,17 @@
 package org.myNeuro;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class NeuroNetwork {
+public class NeuronNetwork {
     final float LEARNING_RATE = 0.5F;
     List<List<Neuron>> nn = new ArrayList<>();
 
-    public NeuroNetwork(int numLevels, int... sizes) {
+    public NeuronNetwork(int numLevels, int... sizes) {
         for(int i = 0; i < numLevels; ++i) {
             List<Neuron> level = new ArrayList<>();
             for(int j = 0; j < sizes[i]; ++j) {
-                level.add(new Neuron(this, i, j));
+                level.add(new Neuron(this, i));
             }
             this.nn.add(level);
         }

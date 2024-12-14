@@ -2,7 +2,6 @@ package org.myNeuro;
 
 
 import java.util.List;
-import java.util.Scanner;
 //https://medium.com/@karna.sujan52/back-propagation-algorithm-numerical-solved-f60c6986b643
 
 public class Main {
@@ -21,7 +20,7 @@ public class Main {
 
     public static void main(String[] args) {
         int NUM_LEVELS = 4;
-        NeuroNetwork neuro = new NeuroNetwork(NUM_LEVELS, 15, 13, 12, 10);
+        NeuronNetwork neuro = new NeuronNetwork(NUM_LEVELS, 15, 13, 12, 10);
 
 
 //        for (int i = 0; i < 100000; i++) {
