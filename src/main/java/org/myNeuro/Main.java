@@ -1,71 +1,72 @@
 package org.myNeuro;
 
 
+import org.simpleNN.NeuralNetwork;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 //https://medium.com/@karna.sujan52/back-propagation-algorithm-numerical-solved-f60c6986b643
 
 public class Main {
-    static int[][] numData = new int[][]{
-            {1, 1, 1, 1, -1, 1, 1, -1, 1, 1, -1, 1, 1, 1, 1},
-            {-1, 1, -1, -1, 1, -1, -1, 1, -1, -1, 1, -1, -1, 1, -1},
-            {1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1},
-            {1, 1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1},
-            {1, -1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, -1, -1, 1},
-            {1, 1, 1, 1, -1, -1, 1, 1, 1, -1, -1, 1, 1, 1, 1},
-            {1, 1, 1, 1, -1, -1, 1, 1, 1, 1, -1, 1, 1, 1, 1},
-            {1, 1, 1, -1, -1, 1, -1, -1, 1, -1, -1, 1, -1, -1, 1},
-            {1, 1, 1, 1, -1, 1, 1, 1, 1, 1, -1, 1, 1, 1, 1},
-            {1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1}};
+//    static int[][] numData = new int[][]{
+//            {1, 1, 1, 1, -1, 1, 1, -1, 1, 1, -1, 1, 1, 1, 1},
+//            {-1, 1, -1, -1, 1, -1, -1, 1, -1, -1, 1, -1, -1, 1, -1},
+//            {1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1},
+//            {1, 1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1},
+//            {1, -1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, -1, -1, 1},
+//            {1, 1, 1, 1, -1, -1, 1, 1, 1, -1, -1, 1, 1, 1, 1},
+//            {1, 1, 1, 1, -1, -1, 1, 1, 1, 1, -1, 1, 1, 1, 1},
+//            {1, 1, 1, -1, -1, 1, -1, -1, 1, -1, -1, 1, -1, -1, 1},
+//            {1, 1, 1, 1, -1, 1, 1, 1, 1, 1, -1, 1, 1, 1, 1},
+//            {1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1}};
 
 
-    public static void main(String[] args) {
-        int NUM_LEVELS = 4;
-        NeuronNetwork neuro = new NeuronNetwork(NUM_LEVELS, 15, 13, 12, 10);
+    public static void main(String[] args) throws IOException {
+        int NUM_LEVELS = 3;
+        NeuronNetwork neuro = new NeuronNetwork(NUM_LEVELS, 784, 512, 10);
 
+        int samples = 600;
+        BufferedImage[] images = new BufferedImage[samples];
+        int[] digits = new int[samples];
+        File[] imagesFiles = new File("c:/projects/train").listFiles();
+        for (int i = 0; i < samples; i++) {
+            images[i] = ImageIO.read(imagesFiles[i]);
+            digits[i] = Integer.parseInt(imagesFiles[i].getName().charAt(10) + "");
+        }
 
-//        for (int i = 0; i < 100000; i++) {
-//            neuro.setValueFirst(new int[]{1, 1});
-//            for (int k = 0; k < neuro.getLevel(NUM_LEVELS - 1).size(); ++k) {
-//                neuro.getNeuron(NUM_LEVELS - 1, k).teach(1);
-//            }
-//
-//            neuro.setValueFirst(new int[]{0, 0});
-//            for (int k = 0; k < neuro.getLevel(NUM_LEVELS - 1).size(); ++k) {
-//                neuro.getNeuron(NUM_LEVELS - 1, k).teach(0);
-//            }
-//
-//            neuro.setValueFirst(new int[]{0, 1});
-//            for (int k = 0; k < neuro.getLevel(NUM_LEVELS - 1).size(); ++k) {
-//                neuro.getNeuron(NUM_LEVELS - 1, k).teach(1);
-//            }
-//
-//            neuro.setValueFirst(new int[]{1, 0});
-//            for (int k = 0; k < neuro.getLevel(NUM_LEVELS - 1).size(); ++k) {
-//                neuro.getNeuron(NUM_LEVELS - 1, k).teach(1);
-//            }
+        float[][] inputs = new float[samples][784];
+        for (int i = 0; i < samples; i++) {
+            for (int x = 0; x < 28; x++) {
+                for (int y = 0; y < 28; y++) {
+                    inputs[i][x + y * 28] = (float)((images[i].getRGB(x, y) & 0xff) / 255.0);
+                }
+            }
+        }
 
-
-        for(int i = 0; i <= 5000; ++i) {
-            for(int j = 0; j < numData.length; ++j) {
-                neuro.setValueFirst(numData[j]);
+        for(int i = 0; i <= 500; ++i) {
+            for(int j = 0; j < samples; j++) {
+                neuro.setValueFirst(inputs[j]);
                 List<Neuron> list = neuro.getLevel(NUM_LEVELS - 1);
-                System.out.print("===" + j + "=== " + i + " ");
+                System.out.print("===" + digits[j] + "=== " + i + " ");
 
-                float maxVal = 0;
+                double maxVal = 0;
                 int intVal = 0;
                 for (int k = 0; k < list.size(); k++) {
-                    float val = list.get(k).value;
+                    double val = list.get(k).value;
                     if (maxVal < val) {
                         maxVal = val;
-                        intVal = k;
+                         
                     }
                 }
                 if ((intVal - j)!=0) System.out.print(" ERROR");
                 System.out.println(" intVal " + intVal + " maxVal " + maxVal);
 
 
-                for(int k = 0; k < numData.length; ++k) {
-                    neuro.getNeuron(NUM_LEVELS - 1, k).teach(k == j ? 1.0F : 0.0F);
+                for(int k = 0; k < 10; k++) {
+                    neuro.getNeuron(NUM_LEVELS - 1, k).teach(k == digits[j] ? 1.0f : 0.0f);
                 }
 
 

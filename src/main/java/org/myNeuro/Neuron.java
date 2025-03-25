@@ -75,10 +75,10 @@ public class Neuron {
 
     }
 
-    float sigmoid2(float x) {
+    float sigmoid(float x) {
         return (1.0f / (1.0f + (float) Math.exp((-x))));
     }
-    float sigmoid(float x) {
+    float sigmoid1(float x) {
         // Return early for large or small x values to avoid overflow issues and enhance stability
         if (x > 20) {
             return 1.0f; // e^x is very large and effectively reaches 1
@@ -100,7 +100,7 @@ public class Neuron {
         }
     }
 
-    float sigmoid1(float x) {
+    float sigmoid5(float x) {
         return 0.5f * (x / (1 + abs(x))) + 0.5f;
     }
 

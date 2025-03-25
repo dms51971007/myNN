@@ -26,7 +26,7 @@ public class NeuronNetwork {
         return nn.get(level).get(index);
     }
 
-    public void setValueFirst(int[] values) {
+    public void setValueFirst(float[] values) {
         List<Neuron> level = this.getLevel(0);
 
         for(int i = 0; i < level.size(); ++i) {
