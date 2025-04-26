@@ -7,15 +7,15 @@ import static java.lang.Math.abs;
 public class Neuron {
     NeuronNetwork nn;
     int level;
-    float[] weights;
-    float bias;
+    double[] weights;
+    double bias;
 
-    public float value;
+    public double value;
 
 
     public Neuron(NeuronNetwork nn, int level) {
         int sizeWeight = level == 0 ? 0 : nn.getLevel(level - 1).size();
-        this.weights = new float[sizeWeight];
+        this.weights = new double[sizeWeight];
         this.nn = nn;
         this.level = level;
         for(int i = 0; i < sizeWeight; ++i) {
@@ -25,28 +25,28 @@ public class Neuron {
 
     }
 
-    public void setValue(float value) {
+    public void setValue(double value) {
         this.value = value;
     }
 
-    public void setWeights(float... weights) {
+    public void setWeights(double... weights) {
         this.weights = weights;
         //this.calcValue();
     }
 
-    public void teach(float correctValue) {
+    public void teach(double correctValue) {
         if (this.level != 0) {
             List<Neuron> preLevel = this.nn.getLevel(this.level - 1);
 
-            float error = this.value * (1.0F - this.value) * (correctValue - this.value);
+            double error = this.value * (1.0F - this.value) * (correctValue - this.value);
 //            if (this.level == nn.nn.size()-1)
 //                System.out.println("level " + this.level + " error " + error);
-            float[] newWeight = new float[this.weights.length];
+            double[] newWeight = new double[this.weights.length];
 
 
             for(int i = 0; i < preLevel.size(); i++) {
                 Neuron n = preLevel.get(i);
-                float correct = n.value + weights[i] * error;
+                double correct = n.value + weights[i] * error;
                 n.teach(correct);
             }
 
@@ -60,7 +60,7 @@ public class Neuron {
         }
     }
 
-    void calcValue() {
+    void   calcValue() {
         if (level > 0) {
             float res = 0.0F;
             List<Neuron> preLevel = nn.getLevel(this.level - 1);
@@ -75,8 +75,8 @@ public class Neuron {
 
     }
 
-    float sigmoid(float x) {
-        return (1.0f / (1.0f + (float) Math.exp((-x))));
+    double sigmoid(double x) {
+        return (1.0d / (1.0d + Math.exp((-x))));
     }
     float sigmoid1(float x) {
         // Return early for large or small x values to avoid overflow issues and enhance stability

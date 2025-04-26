@@ -25,8 +25,8 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-        int NUM_LEVELS = 3;
-        NeuronNetwork neuro = new NeuronNetwork(NUM_LEVELS, 784, 512, 10);
+        int NUM_LEVELS = 5;
+        NeuronNetwork neuro = new NeuronNetwork(NUM_LEVELS, 784, 512, 128, 32, 10);
 
         int samples = 600;
         BufferedImage[] images = new BufferedImage[samples];
@@ -47,10 +47,10 @@ public class Main {
         }
 
         for(int i = 0; i <= 500; ++i) {
+            int correct = 0;
             for(int j = 0; j < samples; j++) {
                 neuro.setValueFirst(inputs[j]);
                 List<Neuron> list = neuro.getLevel(NUM_LEVELS - 1);
-                System.out.print("===" + digits[j] + "=== " + i + " ");
 
                 double maxVal = 0;
                 int intVal = 0;
@@ -58,19 +58,19 @@ public class Main {
                     double val = list.get(k).value;
                     if (maxVal < val) {
                         maxVal = val;
-                         
+                        intVal = k;
                     }
                 }
-                if ((intVal - j)!=0) System.out.print(" ERROR");
-                System.out.println(" intVal " + intVal + " maxVal " + maxVal);
+                if ((intVal - digits[j])==0) correct++;
 
 
                 for(int k = 0; k < 10; k++) {
                     neuro.getNeuron(NUM_LEVELS - 1, k).teach(k == digits[j] ? 1.0f : 0.0f);
                 }
-
-
             }
+            System.out.println("i " + i +  "  correct " + correct);
+
+
         }
 
 

@@ -5,7 +5,7 @@ import java.util.function.UnaryOperator;
 public class NeuralNetwork {
 
     private double learningRate;
-    private Layer[] layers;
+    private La yer[] layers;
     private UnaryOperator<Double> activation;
     private UnaryOperator<Double> derivative;
 

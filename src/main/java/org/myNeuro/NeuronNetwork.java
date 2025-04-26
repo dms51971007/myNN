@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NeuronNetwork {
-    final float LEARNING_RATE = 0.5F;
+    final float LEARNING_RATE = 0.001F;
     List<List<Neuron>> nn = new ArrayList<>();
 
     public NeuronNetwork(int numLevels, int... sizes) {
