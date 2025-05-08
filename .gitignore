@@ -41,3 +41,8 @@ bin/
 ### Mac OS ###
 .DS_Store
 .idea
+/.gitattributes
+/app/src/main/java/mynn/App.java
+/app/src/test/java/mynn/AppTest.java
+/gradle/wrapper/gradle-wrapper.jar
+/gradle/wrapper/gradle-wrapper.properties
