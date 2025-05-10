@@ -36,7 +36,7 @@ public class NeuralNetwork {
         }
     }
 
-    public void calc(double[] input) {
+    public void feedForward(double[] input) {
         System.arraycopy(input, 0, layers[0].neurons, 0, input.length);
         boolean isTrace = l.isTraceEnabled();
         l.trace("Forward");
@@ -59,7 +59,7 @@ public class NeuralNetwork {
         }
     }
 
-    public void train(double[] input) {
+    public double train(double[] input) {
         l.trace("Backward");
         double[] res = layers[layers.length - 1].neurons.clone();
         double error = 0;
@@ -80,22 +80,25 @@ public class NeuralNetwork {
                     double o = layers[i].neurons[j];
                     layers[i].grad[j] = (o - input[j]) * derivative.apply(o);
                     log = new StringBuilder();
-                    if (isTrace) log.append(String.format("error d[%d]: (%.6f - %.6f) * %.6f * (1 - %.6f) = %.6f", j, o, input[j], o, o, layers[i].grad[j]));
+                    if (isTrace)
+                        log.append(String.format("error d[%d]: (%.6f - %.6f) * %.6f * (1 - %.6f) = %.6f", j, o, input[j], o, o, layers[i].grad[j]));
                     l.trace(log.toString());
                     log = new StringBuilder();
-                    if (isTrace) log.append(String.format("bias[%d]: %.6f + (-%.6f*%.6f) = %.6f",  j, layers[i].biases[j], learningRate, layers[i].grad[j], layers[i].biases[j] + (-learningRate * layers[i].grad[j])));
+                    if (isTrace)
+                        log.append(String.format("bias[%d]: %.6f + (-%.6f*%.6f) = %.6f", j, layers[i].biases[j], learningRate, layers[i].grad[j], layers[i].biases[j] + (-learningRate * layers[i].grad[j])));
                     l.trace(log.toString());
                     layers[i].biases[j] = layers[i].biases[j] + (-learningRate * layers[i].grad[j]);
                 }
                 calcWeights(i);
             } else {
                 l.trace("layer {}", i);
-                for (int k = 0; k < layers[i+1].size; k++) {
+                for (int k = 0; k < layers[i + 1].size; k++) {
                     double dw = 0;
-                    for (int j = 0; j < layers[i+1].size; j++) {
-                        dw += layers[i+1].oldWeights[j][k] * layers[i+1].grad[j];
-                        if (isTrace) log.append(String.format("%.6f * %.6f", layers[i+1].grad[j] ,layers[i+1].oldWeights[j][k]));
-                        if (j != layers[i+1].size-1)
+                    for (int j = 0; j < layers[i + 1].size; j++) {
+                        dw += layers[i + 1].oldWeights[j][k] * layers[i + 1].grad[j];
+                        if (isTrace)
+                            log.append(String.format("%.6f * %.6f", layers[i + 1].grad[j], layers[i + 1].oldWeights[j][k]));
+                        if (j != layers[i + 1].size - 1)
                             if (isTrace) log.append(" + ");
                     }
                     if (isTrace) log.append(String.format(" = %.6f", dw));
@@ -107,18 +110,16 @@ public class NeuralNetwork {
                 }
                 for (int j = 0; j < layers[i].size; j++) {
 
-                    layers[i].biases[j] = layers[i].biases[j] +  (-learningRate*layers[i].grad[j]);
+                    layers[i].biases[j] = layers[i].biases[j] + (-learningRate * layers[i].grad[j]);
                     log = new StringBuilder(String.format("%.6f + ( -%.6f * %.6f) = %.6f", layers[i].biases[j], learningRate, layers[i].grad[j], layers[i].biases[j]));
                     if (isTrace) l.trace("{}", log);
 
                 }
                 calcWeights(i);
             }
-
-
+        }
+        return error;
     }
-
-}
 
     public double[] getResult() {
         return layers[layers.length - 1].neurons;

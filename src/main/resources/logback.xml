@@ -9,7 +9,7 @@
         <appender-ref ref="STDOUT" />
     </root>
 
-    <logger name="org.myNeuroV2.MainNN" level="TRACE"/>
+    <logger name="org.myNeuroV2.MainNN" level="info"/>
     <logger name="org.myNeuroV2.NeuralNetwork" level="INFO"/>
 
 </configuration>
