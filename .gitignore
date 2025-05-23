@@ -46,3 +46,6 @@ bin/
 /app/src/test/java/mynn/AppTest.java
 /gradle/wrapper/gradle-wrapper.jar
 /gradle/wrapper/gradle-wrapper.properties
+/train/
+/gradlew
+/gradlew.bat
