@@ -21,12 +21,12 @@ public class MainNN {
     private static void digits() throws IOException {
         UnaryOperator<Double> sigmoid = x -> 1 / (1 + Math.exp(-x));
         UnaryOperator<Double> dsigmoid = y -> y * (1 - y);
-        NeuralNetwork nn = new NeuralNetwork(0.01, sigmoid, dsigmoid, 784, 512, 128, 32, 10);
+        NeuralNetwork nn = new NeuralNetwork(0.001, sigmoid, dsigmoid, 784, 512, 128, 32, 10);
 
-        int samples = 600;
+        int samples = 60000;
         BufferedImage[] images = new BufferedImage[samples];
         int[] digits = new int[samples];
-        File[] imagesFiles = new File("c:/proj/train").listFiles();
+        File[] imagesFiles = new File("c:/projects/train").listFiles();
         for (int i = 0; i < samples; i++) {
             images[i] = ImageIO.read(imagesFiles[i]);
             digits[i] = Integer.parseInt(imagesFiles[i].getName().charAt(10) + "");
@@ -41,7 +41,7 @@ public class MainNN {
             }
         }
 
-        int epochs = 100;
+        int epochs = 1000;
         for (int i = 1; i < epochs; i++) {
             int right = 0;
             double errorSum = 0;

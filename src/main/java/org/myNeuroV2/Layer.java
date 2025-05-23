@@ -13,6 +13,9 @@ public class Layer {
 
     public double[] grad;
 
+    public Layer() {
+    }
+
     public Layer(int size, int prevSize) {
         this.size = size;
         neurons = new double[size];

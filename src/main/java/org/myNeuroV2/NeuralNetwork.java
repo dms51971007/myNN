@@ -7,15 +7,46 @@ import java.util.function.UnaryOperator;
 
 public class NeuralNetwork {
 
-    private final double learningRate;
+    public double learningRate = 0.0;
     public Layer[] layers;
-    private final UnaryOperator<Double> activation;
-    private final UnaryOperator<Double> derivative;
+
+    public double getLearningRate() {
+        return learningRate;
+    }
+
+    public Layer[] getLayers() {
+        return layers;
+    }
+
+    public void setLearningRate(double learningRate) {
+        this.learningRate = learningRate;
+    }
+
+    public void setLayers(Layer[] layers) {
+        this.layers = layers;
+    }
+
+    public void setL(Logger l) {
+        this.l = l;
+    }
+
+    private UnaryOperator<Double> activation = x -> 1 / (1 + Math.exp(-x));
+    private UnaryOperator<Double> derivative = y -> y * (1 - y);
     Logger l =  LoggerFactory.getLogger(NeuralNetwork.class);
     boolean isTrace = l.isTraceEnabled();
 
+    public NeuralNetwork() {
+    }
 
-    public NeuralNetwork(double learningRate, UnaryOperator<Double> activation, UnaryOperator<Double> derivative, int... sizes) {
+    public void setActivation(UnaryOperator<Double> activation) {
+        this.activation = activation;
+    }
+
+    public void setDerivative(UnaryOperator<Double> derivative) {
+        this.derivative = derivative;
+    }
+
+    public NeuralNetwork(double learningRate, int... sizes) {
         this.learningRate = learningRate;
         this.activation = activation;
         this.derivative = derivative;
@@ -121,11 +152,11 @@ public class NeuralNetwork {
         return error;
     }
 
-    public double[] getResult() {
+    public double[] result() {
         return layers[layers.length - 1].neurons;
     }
 
-    private void calcWeights(int i) {
+    private void  calcWeights(int i) {
         for (int k = 0; k < layers[i].weights[0].length; k++) {
             for (int j = 0; j < layers[i].size; j++) {
                 double dw = -learningRate *  layers[i].grad[j] * layers[i-1].neurons[k];

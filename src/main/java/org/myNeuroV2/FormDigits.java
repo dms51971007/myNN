@@ -64,7 +64,7 @@ public class FormDigits extends JFrame implements Runnable, MouseListener, Mouse
             }
         }
         nn.feedForward(inputs);
-        double[] outputs = nn.getResult();
+        double[] outputs = nn.result();
         int maxDigit = 0;
         double maxDigitWeight = -1;
         for (int i = 0; i < 10; i++) {
